@@ -1,0 +1,25 @@
+{
+	"name": "hohoro",
+	"version": "0.0.1",
+	"bin": {
+    "hohoro": "./bin/index.mjs"
+  },
+	"type": "module",
+	"devDependencies": {
+		"@biomejs/biome": "1.6.3",
+		"@swc/cli": "0.3.10",
+		"@swc/core": "1.4.2",
+		"@types/bun": "latest"
+	},
+	"dependencies": {
+		"debug": "4.3.4",
+    "fast-glob": "3.3.2"
+	},
+	"scripts": {
+		"lint": "biome lint ./",
+		"test": "node --test",
+		"test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
+		"prepub": "bun run lint && bun run test",
+		"pub": "npm publish --access public"
+	}
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "jsc": {
+    "externalHelpers": true,
+    "parser": {
+      "syntax": "typescript"
+    }
+  },
+  "module": {
+    "type": "commonjs"
+  },
+  "minify": false,
+  "env": {
+    "targets": {
+      "chrome": "100",
+      "ie": "11"
+    }
+  },
+  "exclude": [".*\\.test.ts$"]
+}
