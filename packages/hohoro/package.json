@@ -4,6 +4,16 @@
 	"bin": {
     "hohoro": "./bin/index.mjs"
   },
+	"repository": {
+		"type": "git",
+		"directory": "packages/hohoro",
+		"url": "https://github.com/hamlim/hohoro"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Matthew Hamlin",
+		"email": "matthewjameshamlin@gmail.com"
+	},
 	"type": "module",
 	"devDependencies": {
 		"@biomejs/biome": "1.6.3",

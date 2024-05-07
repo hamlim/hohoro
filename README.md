@@ -1,6 +1,6 @@
-# Template Monorepo
+# Hohoro Monorepo
 
-This is a template repo in GitHub for creating a fresh monorepo for managing code and documentation.
+This repo contains the [`hohoro`](./packages/hohoro/README.md) library, an incremental build tool for JavaScript and TypeScript projects.
 
 For more details on this setup, refer to my blog post here: https://matthamlin.me/2024/february/library-docs-monorepo-template
 
