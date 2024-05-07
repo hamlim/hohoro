@@ -1,38 +1,43 @@
-# `pkg-a`
+# `hohoro`
 
-To install dependencies:
+An incremental build tool for JavaScript and TypeScript projects.
 
-```bash
-bun install
+## Installation:
+
+```sh
+bun add hohoro
 ```
 
-To run:
+## Usage:
 
-```bash
-bun run ./src/index.ts
+Add a build script to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "build": "hohoro"
+  }
+}
 ```
 
-## Building:
+Ensure you have SWC and TSC installed and configured, specifically you'll need:
 
-This library uses [`swc`](https://swc.rs/) and [`TypeScript`](https://www.typescriptlang.org/docs/) to build the source code and generate types.
+- `.swcrc` in the root of your project
+- `tsconfig.json` in the root of your project
 
-To build the library, run `bun run build` from the root, or from this workspace!
+## Contributing:
 
-## Code Quality:
+### Code Quality:
 
-### Type Checking:
-
-This library uses TypeScript to perform type checks, run `bun run type-check` from the root or from this workspace!
-
-### Linting
+#### Linting
 
 This library uses [BiomeJS](https://biomejs.dev/) for linting, run `bun run lint` from the root or from this workspace!
 
-### Tests
+#### Tests
 
-This library uses Bun for running unit tests, run `bun run test` from the root or from this workspace!
+This library uses Node for running unit tests, run `bun run test` from the root or from this workspace!
 
-## Publishing:
+### Publishing:
 
 To publish the library, run `bun run pub` from the workspace root. This will prompt you to login to npm and publish the package.
 
