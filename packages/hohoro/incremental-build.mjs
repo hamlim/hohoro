@@ -8,7 +8,7 @@ import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 
-const debug = createDebug("@wayfair/build");
+const debug = createDebug("hohoro");
 
 function compile({ rootDirectory, files, logger }) {
   const swcConfigPath = pathJoin(rootDirectory, ".swcrc");
