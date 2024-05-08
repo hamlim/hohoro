@@ -92,7 +92,7 @@ export async function runBuild(
 ) {
   const start = Date.now();
   debug("[runBuild] Starting...");
-  const cacheFilePath = pathJoin(rootDirectory, "dist", "wf-build-cache.json");
+  const cacheFilePath = pathJoin(rootDirectory, "dist", "build-cache.json");
   const cacheFile = loadCacheFile({ cacheFilePath });
   debug(`Cache file: `, JSON.stringify(cacheFile, null, 2));
 
