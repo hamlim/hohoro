@@ -1,5 +1,9 @@
 ### Unreleased:
 
+### [0.0.4] - May 7th, 2024
+
+- Updated tests, fixed debug parameter
+
 ### [0.0.3] - May 6th, 2024
 
 - Updated context within package.json

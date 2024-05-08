@@ -1,5 +1,4 @@
 {
-  "extends": "../../config/tsconfig.lib.json",
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "dist",
@@ -9,7 +8,9 @@
       "@root/*": ["./src/*"]
     },
     "types": ["node"],
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "emitDeclarationOnly": true,
+    "declaration": true
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.stories.tsx"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
