@@ -1,5 +1,7 @@
 ### Unreleased:
 
+### [0.0.5] - May 13th, 2024
+
 - Update build cache filename - will temporarily invalidate caches locally
 
 ### [0.0.4] - May 7th, 2024
