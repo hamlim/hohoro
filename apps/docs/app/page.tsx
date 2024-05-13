@@ -98,10 +98,52 @@ export default function Home() {
           under the hood, leveraging your existing configuration for both tools.
         </P>
         <P>If you haven&apos;t yet, you&apos;ll want to install both tools and setup local configuration for them.</P>
+        <details className="mt-4">
+          <summary>Recommendations:</summary>
+          <div className="border-l-2 border-slate pl-4 ml-2 mt-2">
+            <P>
+              For <InlineCode>swc</InlineCode> I recommend using{" "}
+              <Link href="https://swc.rs/docs/configuration/swcrc">
+                the official configuration guide
+              </Link>{" "}
+              to create a <InlineCode>.swcrc</InlineCode> file.
+            </P>
+            <P>
+              For <InlineCode>TypeScript</InlineCode> I recommend using{" "}
+              <Link href="https://tsconfig.guide/">tsconfig.guide</Link> (a minimal UI on top of{" "}
+              <Link href="https://www.totaltypescript.com/tsconfig-cheat-sheet">
+                Matt Pocock&apos;s TSConfig Cheat Sheet
+              </Link>) to create a <InlineCode>tsconfig.json</InlineCode> file.
+            </P>
+          </div>
+        </details>
+        <P>
+          Once the above tools are configured however you&apos;d like, you can set your <InlineCode>build</InlineCode>
+          {" "}
+          script to the <InlineCode>hohoro</InlineCode> binary:
+        </P>
+
+        <Code lang="json">
+          {`{
+  "scripts": {
+    "build": "hohoro"
+  }
+}`}
+        </Code>
+        <P>
+          Then run <InlineCode>build</InlineCode> to build your project!
+        </P>
       </section>
       <footer className={sectionClasses}>
         <P>
-          <Link href="https://github.com/hamlim/hohoro">GitHub</Link>
+          The source code for the library is available on{" "}
+          <Link href="https://github.com/hamlim/hohoro">GitHub</Link>. If you run into any bugs, please report them via
+          {" "}
+          <Link href="https://github.com/hamlim/hohoro/issues/new">issues</Link>.
+        </P>
+        <P>
+          If you&apos;d like to discuss changes to the project, feel free to start a{" "}
+          <Link href="https://github.com/hamlim/hohoro/discussions/new/choose">discussion</Link>!
         </P>
       </footer>
     </main>
