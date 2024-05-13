@@ -1,5 +1,7 @@
 ### Unreleased:
 
+- Improve readme with additional context of the library
+
 ### [0.0.5] - May 13th, 2024
 
 - Update build cache filename - will temporarily invalidate caches locally

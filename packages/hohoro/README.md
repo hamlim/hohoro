@@ -25,6 +25,8 @@ Ensure you have SWC and TSC installed and configured, specifically you'll need:
 - `.swcrc` in the root of your project
 - `tsconfig.json` in the root of your project
 
+`hohoro` takes care of the rest by automatically running SWC and TSC in parallel, and only recompiling files that have changed since the last build.
+
 ## Contributing:
 
 ### Code Quality:
