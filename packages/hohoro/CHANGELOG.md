@@ -1,6 +1,9 @@
 ### Unreleased:
 
+### [0.1.0] - May 13th, 2024
+
 - Improve readme with additional context of the library
+- Add homepage to package.json
 
 ### [0.0.5] - May 13th, 2024
 

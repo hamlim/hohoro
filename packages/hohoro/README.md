@@ -2,6 +2,8 @@
 
 An incremental build tool for JavaScript and TypeScript projects.
 
+**[Docs](https://hohoro.vercel.app/)**
+
 ## Installation:
 
 ```sh
