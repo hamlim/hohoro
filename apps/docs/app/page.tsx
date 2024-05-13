@@ -36,7 +36,7 @@ export default function Home() {
 
         <Blockquote>
           <P>
-            hohoro is Maori for "make haste" or "hurry up"
+            hohoro is Maori for &quot;make haste&quot; or &quot;hurry up&quot;
           </P>
         </Blockquote>
 
