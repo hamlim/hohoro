@@ -97,6 +97,7 @@ export default function Home() {
           </Link>{" "}
           under the hood, leveraging your existing configuration for both tools.
         </P>
+        <P>If you haven't yet, you'll want to install both tools and setup local configuration for them.</P>
       </section>
       <footer className={sectionClasses}>
         <P>
