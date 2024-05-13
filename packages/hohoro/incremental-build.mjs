@@ -13,11 +13,17 @@ const debug = createDebug("hohoro");
 function compile({ rootDirectory, files, logger }) {
   const swcConfigPath = pathJoin(rootDirectory, ".swcrc");
   const distPath = pathJoin(rootDirectory, "dist");
-  const command = `swc ${
-    files.join(
-      " ",
-    )
-  } -d ${distPath} --copy-files --config-file ${swcConfigPath}`;
+  const command = [
+    "swc",
+    files.join(" "),
+    "-d",
+    distPath,
+    // copy over files that are not compiled
+    "--copy-files",
+    `--config-file ${swcConfigPath}`,
+    // Remove the leading directories from the compiled files
+    "--strip-leading-paths",
+  ].join(" ");
   debug(`[compile] ${command}`);
   return execAsync(command).then(({ stdout, stderr }) => {
     if (stderr) {

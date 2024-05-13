@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "canary",
-    "react": "experimental",
-    "react-dom": "experimental"
+    "next": "14.3.0-canary.59",
+    "react": "0.0.0-experimental-9d76c954cf-20240510",
+    "react-dom": "0.0.0-experimental-9d76c954cf-20240510"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -22,6 +22,6 @@
     "eslint-config-next": "14.1.4",
     "postcss": "8.4.35",
     "tailwindcss": "3.3.0",
-    "typescript": "latest"
+    "typescript": "5.4.4"
   }
 }
