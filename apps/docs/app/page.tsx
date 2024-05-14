@@ -17,8 +17,6 @@ export const metadata: Metadata = {
 Code.theme = {
   dark: "github-dark",
   light: "github-light",
-  // using a different CSS selector:
-  // lightSelector: '[data-theme="light"]',
   lightSelector: "html.light",
   darkSelector: "html.dark",
 };
