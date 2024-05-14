@@ -1,3 +1,4 @@
+import { StarIcon } from "@radix-ui/react-icons";
 import { Code } from "bright";
 import type { Metadata } from "next";
 import { Blockquote, H1, H2, InlineCode, Link, P } from "~/components/typography";
@@ -40,9 +41,14 @@ export default function Home() {
           </P>
         </Blockquote>
 
-        <div className="pt-10 flex row justify-center items-center">
+        <div className="pt-10 flex row justify-evenly items-center">
           <Button asChild>
             <a href="#installation">Get Started</a>
+          </Button>
+          <Button variant="outline" asChild>
+            <a href="https://github.com/hamlim/hohoro">
+              <StarIcon className="mr-2 inline-flex" /> Star on GitHub
+            </a>
           </Button>
         </div>
       </header>
