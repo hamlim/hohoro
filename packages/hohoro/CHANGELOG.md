@@ -1,5 +1,10 @@
 ### Unreleased:
 
+### [0.1.1] - May 20th, 2024
+
+- Fix file paths within `build-cache.json` to be relative to the project root
+  - Note - upgrading to this version may invalidate the cache locally!
+
 ### [0.1.0] - May 13th, 2024
 
 - Improve readme with additional context of the library

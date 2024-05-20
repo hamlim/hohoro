@@ -1,7 +1,7 @@
 {
 	"name": "hohoro",
 	"description": "An incremental build tool for JavaScript and TypeScript projects.",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"bin": {
     "hohoro": "./bin/index.mjs"
   },

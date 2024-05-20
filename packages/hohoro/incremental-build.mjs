@@ -115,8 +115,10 @@ export async function runBuild(
     },
   );
 
+  const relativeFiles = files.map(file => file.split(rootDirectory)[1]);
+
   const filesHashed = (await Promise.all(files.map(hashFile))).map(
-    (hashed, idx) => [files[idx], hashed],
+    (hashed, idx) => [relativeFiles[idx], hashed],
   );
 
   const changedFiles = [];
@@ -138,9 +140,11 @@ export async function runBuild(
 
   debug(`[runBuild] Changed files: `, JSON.stringify(changedFiles, null, 2));
 
+  const absoluteChangedFiles = changedFiles.map(changedFile => rootDirectory + changedFile);
+
   await Promise.all([
-    compile({ rootDirectory, files: changedFiles, logger }),
-    compileDeclarations({ rootDirectory, files: changedFiles, logger }),
+    compile({ rootDirectory, files: absoluteChangedFiles, logger }),
+    compileDeclarations({ rootDirectory, files: absoluteChangedFiles, logger }),
   ]);
   try {
     writeFileSync(cacheFilePath, JSON.stringify(filesHashed));
