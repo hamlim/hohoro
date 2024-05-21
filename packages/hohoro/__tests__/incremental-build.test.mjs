@@ -14,10 +14,10 @@ before(() => {
   const templateDir = pathJoin(
     __dirname,
     "..",
-    "test-workspace-dir",
+    "sample-workspace-dir",
     "template",
   );
-  const srcDir = pathJoin(__dirname, "..", "test-workspace-dir", "src");
+  const srcDir = pathJoin(__dirname, "..", "sample-workspace-dir", "src");
   const files = fg.sync(pathJoin(templateDir, "**/*.{ts,tsx,js,json}"));
 
   for (const file of files) {
@@ -38,17 +38,21 @@ test("It correctly builds the library", async () => {
     },
   };
   await runBuild({
-    rootDirectory: pathJoin(__dirname, "..", "test-workspace-dir"),
+    rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
     logger,
   });
 
   const distFiles = fg.sync(
-    pathJoin(__dirname, "..", "test-workspace-dir", "dist", "**/*"),
+    pathJoin(__dirname, "..", "sample-workspace-dir", "dist", "**/*"),
   );
 
   assert.ok(
     distFiles.some((file) => file.includes("tsx-file.js")),
     "Couldn't find tsx-file.js!",
+  );
+  assert.ok(
+    distFiles.some((file) => file.includes("tsx-file.d.ts")),
+    "Couldn't find tsx-file.d.ts!",
   );
   assert.ok(
     distFiles.some((file) => file.includes("js-file.js")),
@@ -81,14 +85,14 @@ test("It only builds changed files", async () => {
   const tsxFile = pathJoin(
     __dirname,
     "..",
-    "test-workspace-dir",
+    "sample-workspace-dir",
     "src",
     "tsx-file.tsx",
   );
   writeFileSync(tsxFile, `export const foo = 'bar';`);
 
   await runBuild({
-    rootDirectory: pathJoin(__dirname, "..", "test-workspace-dir"),
+    rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
     logger,
   });
 
@@ -99,12 +103,16 @@ test("It only builds changed files", async () => {
   );
 
   const distFiles = fg.sync(
-    pathJoin(__dirname, "..", "test-workspace-dir", "dist", "**/*"),
+    pathJoin(__dirname, "..", "sample-workspace-dir", "dist", "**/*"),
   );
 
   assert.ok(
     distFiles.some((file) => file.includes("tsx-file.js")),
     "Couldn't find tsx-file.js!",
+  );
+  assert.ok(
+    distFiles.some((file) => file.includes("tsx-file.d.ts")),
+    "Couldn't find tsx-file.d.ts!",
   );
   assert.ok(
     distFiles.some((file) => file.includes("js-file.js")),
@@ -119,13 +127,13 @@ test("It only builds changed files", async () => {
 
 // cleanup src and dist dirs after the tests run
 after(() => {
-  const srcDir = pathJoin(__dirname, "..", "test-workspace-dir", "src");
+  const srcDir = pathJoin(__dirname, "..", "sample-workspace-dir", "src");
 
   const files = fg.sync(pathJoin(srcDir, "**/*.{ts,tsx,js,json}"));
   for (const file of files) {
     rmSync(file, { recursive: true });
   }
-  rmSync(pathJoin(__dirname, "..", "test-workspace-dir", "dist"), {
+  rmSync(pathJoin(__dirname, "..", "sample-workspace-dir", "dist"), {
     recursive: true,
   });
 });

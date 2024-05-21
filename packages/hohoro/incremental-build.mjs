@@ -3,7 +3,7 @@ import fg from "fast-glob";
 import { exec } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createReadStream, readFileSync, rmSync, writeFileSync } from "node:fs";
-import path, { join as pathJoin } from "node:path";
+import path, { join as pathJoin, resolve } from "node:path";
 import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
@@ -25,11 +25,13 @@ function compile({ rootDirectory, files, logger }) {
     "--strip-leading-paths",
   ].join(" ");
   debug(`[compile] ${command}`);
-  return execAsync(command).then(({ stdout, stderr }) => {
+  return execAsync(command, { cwd: rootDirectory }).then(({ stdout, stderr }) => {
     if (stderr) {
       logger.error(stderr);
     }
-    logger.log(stdout);
+    if (stdout) {
+      logger.log(stdout);
+    }
   });
 }
 
@@ -41,22 +43,33 @@ function compile({ rootDirectory, files, logger }) {
 // ignores the tsconfig file when passing file paths in!
 async function compileDeclarations({ rootDirectory, files, logger }) {
   const tempTSConfigPath = pathJoin(rootDirectory, "temp.tsconfig.json");
+  const tempTSconfig = {
+    extends: "./tsconfig.json",
+    include: files,
+    compilerOptions: {
+      noEmit: false,
+      declaration: true,
+      emitDeclarationOnly: true,
+      outDir: "dist",
+    },
+    exclude: ["**/__tests__/**"],
+  };
+  debug(`[compileDeclarations] Writing temp tsconfig file: `, JSON.stringify(tempTSconfig, null, 2));
   writeFileSync(
     tempTSConfigPath,
-    JSON.stringify({
-      extends: "./tsconfig.json",
-      includes: files,
-    }),
+    JSON.stringify(tempTSconfig, null, 2),
   );
   const command = `tsc --project temp.tsconfig.json`;
   debug(`[compileDeclarations] ${command}`);
-  return execAsync(command).then(
+  return execAsync(command, { cwd: rootDirectory }).then(
     // For both success and failures we want to cleanup the temp file!
     ({ stdout, stderr }) => {
       if (stderr) {
         logger.error(stderr);
       }
-      logger.log(stdout);
+      if (stdout) {
+        logger.log(stdout);
+      }
       rmSync(tempTSConfigPath);
     },
     () => {
@@ -142,10 +155,20 @@ export async function runBuild(
 
   const absoluteChangedFiles = changedFiles.map(changedFile => rootDirectory + changedFile);
 
-  await Promise.all([
+  const [compileResult, declarationsResult] = await Promise.allSettled([
     compile({ rootDirectory, files: absoluteChangedFiles, logger }),
     compileDeclarations({ rootDirectory, files: absoluteChangedFiles, logger }),
   ]);
+  if (compileResult.status === "rejected" || declarationsResult.status === "rejected") {
+    if (compileResult.status === "rejected") {
+      logger.error(`Failed to compile: ${compileResult.reason}`);
+    }
+    if (declarationsResult.status === "rejected") {
+      logger.error(`Failed to compile declarations: ${declarationsResult.reason}`);
+    }
+    debug(`Ran in ${Date.now() - start}ms`);
+    process.exit(1);
+  }
   try {
     writeFileSync(cacheFilePath, JSON.stringify(filesHashed));
   } catch (error) {
