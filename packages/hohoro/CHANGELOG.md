@@ -1,5 +1,11 @@
 ### Unreleased:
 
+### [0.1.2] - May 21st, 2024
+
+- Fix `.d.ts` files not being generated properly by `hohoro`
+- Fix not cleaning up `temp.tsconfig.json` file if `swc` failed to compile
+- Fix calling `build` programatically not working properly (although this is an unstable API)
+
 ### [0.1.1] - May 20th, 2024
 
 - Fix file paths within `build-cache.json` to be relative to the project root
