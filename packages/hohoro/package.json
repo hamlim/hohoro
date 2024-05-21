@@ -33,5 +33,12 @@
 		"test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
 		"prepub": "bun run lint && bun run test",
 		"pub": "npm publish --access public"
-	}
+	},
+	"files": [
+	  "README.md",
+	  "CHANGELOG.md",
+	  "incremental-build.mjs",
+	  "bin",
+	  "package.json"
+	]
 }
