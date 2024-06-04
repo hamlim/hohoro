@@ -1,5 +1,9 @@
 ### Unreleased:
 
+### [0.1.3] - June 4th, 2024
+
+- Simplified the package structure when published to npm - huge thanks to [Zubin Bhaskar](https://github.com/memickeymac03)
+
 ### [0.1.2] - May 21st, 2024
 
 - Fix `.d.ts` files not being generated properly by `hohoro`
