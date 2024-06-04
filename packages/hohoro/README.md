@@ -46,3 +46,12 @@ This library uses Node for running unit tests, run `bun run test` from the root 
 To publish the library, run `bun run pub` from the workspace root. This will prompt you to login to npm and publish the package.
 
 > Note: In the future, we will automate this process using GitHub Actions. And also add in tooling to manage releases / changelogs!
+
+## Used By:
+
+- [Switch Kit](https://switch-kit.vercel.app/)
+
+## Contributors:
+
+- [Matt Hamlin](https://github.com/hamlim)
+- [Zubin Bhaskar](https://github.com/memickeymac03)
