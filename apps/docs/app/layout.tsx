@@ -33,6 +33,7 @@ export default function RootLayout({
       <head>
         <script
           suppressHydrationWarning
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: need to inject the script contents
           dangerouslySetInnerHTML={{
             __html: `(${themeCheck.toString()})()`,
           }}

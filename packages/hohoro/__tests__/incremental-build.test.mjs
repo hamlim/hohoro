@@ -1,9 +1,9 @@
-import fg from "fast-glob";
 import assert from "node:assert";
 import { copyFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join as pathJoin } from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
+import fg from "fast-glob";
 import { runBuild } from "../incremental-build.mjs";
 
 const __filename = fileURLToPath(import.meta.url);

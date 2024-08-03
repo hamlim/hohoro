@@ -28,7 +28,7 @@ Since this is a `turborepo` monorepo, you can run some tasks across the repo wit
 This template has a minimal generator for creating new libraries and applications, both of which are defined by the `template-library` and `template-app` workspaces respectively. To create a new workspace, run the following command:
 
 ```sh
-bun run generate --name <name> --type <package|app>
+bun run generator --name <name> --type <package|app>
 ```
 
 This will create either:
@@ -43,7 +43,6 @@ This will create either:
 - [Next.js](https://nextjs.org)
 - [SWC](https://swc.rs/)
 - [TypeScript](https://www.typescriptlang.org/docs/)
-- [dprint](https://www.typescriptlang.org/docs/)
 - [BiomeJS](https://biomejs.dev/)
 
 ## Future Enhancements:
