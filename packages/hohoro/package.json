@@ -1,44 +1,47 @@
 {
-	"name": "hohoro",
-	"description": "An incremental build tool for JavaScript and TypeScript projects.",
-	"version": "0.1.3",
-	"bin": {
+  "name": "hohoro",
+  "description": "An incremental build tool for JavaScript and TypeScript projects.",
+  "version": "0.2.0",
+  "bin": {
     "hohoro": "./bin/index.mjs"
   },
-	"repository": {
-		"type": "git",
-		"directory": "packages/hohoro",
-		"url": "https://github.com/hamlim/hohoro"
-	},
-	"homepage": "https://hohoro.vercel.app/",
-	"license": "MIT",
-	"author": {
-		"name": "Matthew Hamlin",
-		"email": "matthewjameshamlin@gmail.com"
-	},
-	"type": "module",
-	"devDependencies": {
-		"@biomejs/biome": "1.6.3",
-		"@swc/cli": "0.3.10",
-		"@swc/core": "1.4.2",
-		"@types/bun": "latest"
-	},
-	"dependencies": {
-		"debug": "4.3.4",
+  "exports": {
+    ".": "./incremental-build.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "directory": "packages/hohoro",
+    "url": "https://github.com/hamlim/hohoro"
+  },
+  "homepage": "https://hohoro.vercel.app/",
+  "license": "MIT",
+  "author": {
+    "name": "Matthew Hamlin",
+    "email": "matthewjameshamlin@gmail.com"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@swc/cli": "0.3.10",
+    "@swc/core": "1.4.2",
+    "@types/bun": "latest",
+    "typescript": "5.4.5"
+  },
+  "dependencies": {
+    "debug": "4.3.4",
     "fast-glob": "3.3.2"
-	},
-	"scripts": {
-		"lint": "biome lint ./",
-		"test": "node --test",
-		"test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
-		"prepub": "bun run lint && bun run test",
-		"pub": "npm publish --access public"
-	},
-	"files": [
-	  "README.md",
-	  "CHANGELOG.md",
-	  "incremental-build.mjs",
-	  "bin",
-	  "package.json"
-	]
+  },
+  "scripts": {
+    "lint": "biome lint ./",
+    "test": "node --test",
+    "test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
+    "prepub": "bun run lint && bun run test",
+    "pub": "npm publish --access public"
+  },
+  "files": [
+    "README.md",
+    "CHANGELOG.md",
+    "incremental-build.mjs",
+    "bin",
+    "package.json"
+  ]
 }

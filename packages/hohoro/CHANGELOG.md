@@ -1,5 +1,11 @@
 ### Unreleased:
 
+### [0.2.0] - August 3rd, 2024
+
+- Update formatter to use biome instead of dprint
+- Add docs for "watch mode" support
+- Add exports to package to make build API public
+
 ### [0.1.3] - June 4th, 2024
 
 - Simplified the package structure when published to npm - huge thanks to [Zubin Bhaskar](https://github.com/memickeymac03)

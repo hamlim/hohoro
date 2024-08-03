@@ -1,10 +1,10 @@
-import createDebug from "debug";
-import fg from "fast-glob";
 import { exec } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createReadStream, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path, { join as pathJoin, resolve } from "node:path";
 import { promisify } from "node:util";
+import createDebug from "debug";
+import fg from "fast-glob";
 
 const execAsync = promisify(exec);
 
@@ -25,14 +25,16 @@ function compile({ rootDirectory, files, logger }) {
     "--strip-leading-paths",
   ].join(" ");
   debug(`[compile] ${command}`);
-  return execAsync(command, { cwd: rootDirectory }).then(({ stdout, stderr }) => {
-    if (stderr) {
-      logger.error(stderr);
-    }
-    if (stdout) {
-      logger.log(stdout);
-    }
-  });
+  return execAsync(command, { cwd: rootDirectory }).then(
+    ({ stdout, stderr }) => {
+      if (stderr) {
+        logger.error(stderr);
+      }
+      if (stdout) {
+        logger.log(stdout);
+      }
+    },
+  );
 }
 
 // Hack incoming!
@@ -54,11 +56,11 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
     },
     exclude: ["**/__tests__/**"],
   };
-  debug(`[compileDeclarations] Writing temp tsconfig file: `, JSON.stringify(tempTSconfig, null, 2));
-  writeFileSync(
-    tempTSConfigPath,
+  debug(
+    `[compileDeclarations] Writing temp tsconfig file: `,
     JSON.stringify(tempTSconfig, null, 2),
   );
+  writeFileSync(tempTSConfigPath, JSON.stringify(tempTSconfig, null, 2));
   const command = `tsc --project temp.tsconfig.json`;
   debug(`[compileDeclarations] ${command}`);
   return execAsync(command, { cwd: rootDirectory }).then(
@@ -128,7 +130,7 @@ export async function runBuild(
     },
   );
 
-  const relativeFiles = files.map(file => file.split(rootDirectory)[1]);
+  const relativeFiles = files.map((file) => file.split(rootDirectory)[1]);
 
   const filesHashed = (await Promise.all(files.map(hashFile))).map(
     (hashed, idx) => [relativeFiles[idx], hashed],
@@ -138,8 +140,8 @@ export async function runBuild(
 
   for (const [computedFile, computedHash] of filesHashed) {
     if (
-      cacheFile.find(([filePath]) => filePath === computedFile)?.[1]
-        !== computedHash
+      cacheFile.find(([filePath]) => filePath === computedFile)?.[1] !==
+      computedHash
     ) {
       changedFiles.push(computedFile);
     }
@@ -153,18 +155,25 @@ export async function runBuild(
 
   debug(`[runBuild] Changed files: `, JSON.stringify(changedFiles, null, 2));
 
-  const absoluteChangedFiles = changedFiles.map(changedFile => rootDirectory + changedFile);
+  const absoluteChangedFiles = changedFiles.map(
+    (changedFile) => rootDirectory + changedFile,
+  );
 
   const [compileResult, declarationsResult] = await Promise.allSettled([
     compile({ rootDirectory, files: absoluteChangedFiles, logger }),
     compileDeclarations({ rootDirectory, files: absoluteChangedFiles, logger }),
   ]);
-  if (compileResult.status === "rejected" || declarationsResult.status === "rejected") {
+  if (
+    compileResult.status === "rejected" ||
+    declarationsResult.status === "rejected"
+  ) {
     if (compileResult.status === "rejected") {
       logger.error(`Failed to compile: ${compileResult.reason}`);
     }
     if (declarationsResult.status === "rejected") {
-      logger.error(`Failed to compile declarations: ${declarationsResult.reason}`);
+      logger.error(
+        `Failed to compile declarations: ${declarationsResult.reason}`,
+      );
     }
     debug(`Ran in ${Date.now() - start}ms`);
     process.exit(1);

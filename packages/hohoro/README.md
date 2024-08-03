@@ -29,6 +29,29 @@ Ensure you have SWC and TSC installed and configured, specifically you'll need:
 
 `hohoro` takes care of the rest by automatically running SWC and TSC in parallel, and only recompiling files that have changed since the last build.
 
+### Watch Mode:
+
+`hohoro` doesn't have a built in "watch mode", however you can easily create a local `dev.mjs` script and use `node --watch` to accomplish the same behavior as other build tools!
+
+Create a `dev.mjs` script (or name it whatever you want):
+
+```mjs
+// dev.mjs
+import { runBuild } from "hohoro";
+
+await runBuild({ rootDirectory: process.cwd(), logger: console });
+```
+
+Then add the following `dev` script to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "node --watch-path=./src dev.mjs"
+  }
+}
+```
+
 ## Contributing:
 
 ### Code Quality:
