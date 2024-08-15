@@ -74,8 +74,15 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
       }
       rmSync(tempTSConfigPath);
     },
-    () => {
+    (err) => {
       rmSync(tempTSConfigPath);
+      if (typeof err.stdout === "string") {
+        throw new Error(err.stdout);
+      }
+      if (typeof err.stderr === "string") {
+        throw new Error(err.stderr);
+      }
+      throw new Error(`Unknown raw error: \n\n${JSON.stringify(err, null, 2)}`);
     },
   );
 }
