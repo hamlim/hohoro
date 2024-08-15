@@ -71,6 +71,10 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
       }
       if (stdout) {
         logger.log(stdout);
+      } else {
+        // TSC doesn't seem to output anything on success
+        // so if we don't have stdout, then log a default success message
+        logger.log("Successfully compiled declaration files!");
       }
       rmSync(tempTSConfigPath);
     },
