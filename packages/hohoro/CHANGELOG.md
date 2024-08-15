@@ -1,5 +1,11 @@
 ### Unreleased:
 
+### [0.2.1] - August 15th, 2024
+
+Fix missing stderr output if `tsc` fails for type errors. Previously `hohoro` would exit with a successful exit code and it would be possible for no type declaration files to be generated in dist (or the target output directory).
+
+With this change, if there are type errors, the command will exit with a non-successful exit code and print the type errors from `tsc`!
+
 ### [0.2.0] - August 3rd, 2024
 
 - Update formatter to use biome instead of dprint

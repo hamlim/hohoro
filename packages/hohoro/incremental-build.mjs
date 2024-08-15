@@ -71,11 +71,22 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
       }
       if (stdout) {
         logger.log(stdout);
+      } else {
+        // TSC doesn't seem to output anything on success
+        // so if we don't have stdout, then log a default success message
+        logger.log("Successfully compiled declaration files!");
       }
       rmSync(tempTSConfigPath);
     },
-    () => {
+    (err) => {
       rmSync(tempTSConfigPath);
+      if (typeof err.stdout === "string") {
+        throw new Error(err.stdout);
+      }
+      if (typeof err.stderr === "string") {
+        throw new Error(err.stderr);
+      }
+      throw new Error(`Unknown raw error: \n\n${JSON.stringify(err, null, 2)}`);
     },
   );
 }
