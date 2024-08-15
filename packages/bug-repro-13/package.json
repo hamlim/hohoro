@@ -15,7 +15,8 @@
     "@swc/cli": "0.3.10",
     "@swc/core": "1.4.2",
     "@types/bun": "latest",
-    "hohoro": "workspace:*"
+    "hohoro": "workspace:*",
+    "typescript": "5.4.5"
   },
   "scripts": {
     "build": "hohoro",
