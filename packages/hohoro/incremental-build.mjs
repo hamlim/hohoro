@@ -186,7 +186,7 @@ export async function runBuild(
         `Failed to compile declarations: ${declarationsResult.reason}`,
       );
     }
-    debug(`Ran in ${Date.now() - start}ms`);
+    debug(`Failed, ran in ${Date.now() - start}ms`);
     process.exit(1);
   }
   try {

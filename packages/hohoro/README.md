@@ -52,6 +52,24 @@ Then add the following `dev` script to your `package.json`:
 }
 ```
 
+## Experimental:
+
+This library also exposes a `hohoro-experimental` binary that builds code using [oxc](https://oxc.rs/) with [`oxc-transform`](https://www.npmjs.com/package/oxc-transform).
+
+When using the experimental binary - you'll **need to also install `oxc-transform` as a devDependency**.
+
+### Usage:
+
+```json
+{
+  "scripts": {
+    "build": "hohoro-experimental"
+  }
+}
+```
+
+You **do not need additional configuration** when using the experimental build.
+
 ## Contributing:
 
 ### Code Quality:
@@ -62,7 +80,7 @@ This library uses [BiomeJS](https://biomejs.dev/) for linting, run `bun run lint
 
 #### Tests
 
-This library uses Node for running unit tests, run `bun run test` from the root or from this workspace!
+This library uses Bun for running unit tests, run `bun run test` from the root or from this workspace!
 
 ### Publishing:
 

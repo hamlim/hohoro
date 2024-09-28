@@ -1,0 +1,28 @@
+{
+  "name": "test-experimental-hohoro",
+  "version": "0.0.1",
+  "module": "index.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "1.6.3",
+    "@swc/cli": "0.3.10",
+    "@swc/core": "1.4.2",
+    "@types/bun": "latest",
+    "hohoro": "workspace:*"
+  },
+  "scripts": {
+    "dev": "node --watch-path=./src dev.mjs",
+    "build": "hohoro-experimental",
+    "type-check": "tsc -p ./tsconfig.json",
+    "lint": "biome lint ./src/",
+    "test": "bun test",
+    "prepub": "bun run build && bun run type-check && bun run lint && bun run test",
+    "pub": "npm publish --access public"
+  }
+}
