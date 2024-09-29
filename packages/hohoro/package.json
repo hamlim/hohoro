@@ -1,12 +1,14 @@
 {
   "name": "hohoro",
   "description": "An incremental build tool for JavaScript and TypeScript projects.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "bin": {
-    "hohoro": "./bin/index.mjs"
+    "hohoro": "./bin/index.mjs",
+    "hohoro-experimental": "./bin/experimental.mjs"
   },
   "exports": {
-    ".": "./incremental-build.mjs"
+    ".": "./incremental-build.mjs",
+    "./experimental": "./experimental-incremental-build.mjs"
   },
   "repository": {
     "type": "git",
@@ -24,16 +26,20 @@
     "@swc/cli": "0.3.10",
     "@swc/core": "1.4.2",
     "@types/bun": "latest",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "oxc-transform": "0.30.4"
   },
   "dependencies": {
     "debug": "4.3.4",
     "fast-glob": "3.3.2"
   },
+  "peerDependencies": {
+    "oxc-transform": "0.30.4"
+  },
   "scripts": {
     "lint": "biome lint ./",
-    "test": "node --test",
-    "test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
+    "test": "bun test",
+    "skip-test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
     "prepub": "bun run lint && bun run test",
     "pub": "npm publish --access public"
   },
@@ -41,6 +47,7 @@
     "README.md",
     "CHANGELOG.md",
     "incremental-build.mjs",
+    "experimental-incremental-build.mjs",
     "bin",
     "package.json"
   ]
