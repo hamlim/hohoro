@@ -15,8 +15,8 @@
   },
   "devDependencies": {
     "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "autoprefixer": "10.0.1",
     "eslint": "8.57.0",
     "eslint-config-next": "14.1.4",
