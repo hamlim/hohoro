@@ -1,7 +1,6 @@
 {
-  "name": "bug-repro-13",
+  "name": "test-legacy-hohoro",
   "version": "0.0.1",
-  "private": true,
   "module": "index.ts",
   "exports": {
     ".": {
@@ -12,14 +11,14 @@
   "type": "module",
   "devDependencies": {
     "@biomejs/biome": "1.6.3",
-    "@swc/cli": "0.3.10",
-    "@swc/core": "1.4.2",
     "@types/bun": "latest",
     "hohoro": "workspace:*",
-    "typescript": "5.9.3"
+    "react": "*",
+    "@types/react": "19.2.2"
   },
   "scripts": {
-    "build": "hohoro",
+    "dev": "node --watch-path=./src dev.mjs",
+    "build": "hohoro-legacy",
     "type-check": "tsc -p ./tsconfig.json",
     "lint": "biome lint ./src/",
     "test": "bun test",

@@ -6,7 +6,11 @@
     },
     "packages/*": {
       "ignore": ["**/*.test.(ts|tsx|mjs|js)"],
-      "ignoreDependencies": ["@swc/cli", "@swc/core"]
+      "ignoreDependencies": []
+    },
+    "packages/hohoro": {
+      "ignoreDependencies": ["@swc/cli"],
+      "ignore": ["__tests__/**", "sample-workspace-dir/**"]
     }
   }
 }

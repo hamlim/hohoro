@@ -1,14 +1,14 @@
 {
   "name": "hohoro",
   "description": "An incremental build tool for JavaScript and TypeScript projects.",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "bin": {
     "hohoro": "./bin/index.mjs",
-    "hohoro-experimental": "./bin/experimental.mjs"
+    "hohoro-legacy": "./bin/legacy.mjs"
   },
   "exports": {
     ".": "./incremental-build.mjs",
-    "./experimental": "./experimental-incremental-build.mjs"
+    "./legacy": "./legacy-incremental-build.mjs"
   },
   "repository": {
     "type": "git",
@@ -23,23 +23,26 @@
   },
   "type": "module",
   "devDependencies": {
-    "@swc/cli": "0.3.10",
-    "@swc/core": "1.4.2",
+    "@swc/cli": "0.7.8",
+    "@swc/core": "1.14.0",
     "@types/bun": "latest",
-    "typescript": "5.4.5",
-    "oxc-transform": "0.30.4"
+    "typescript": "5.9.3",
+    "oxc-transform": "0.96.0"
   },
   "dependencies": {
     "debug": "4.3.4",
-    "fast-glob": "3.3.2"
+    "fast-glob": "3.3.2",
+    "oxc-transform": "0.96.0"
   },
   "peerDependencies": {
-    "oxc-transform": "0.30.4"
+    "@swc/cli": "^0.7.8",
+    "@swc/core": "^1.14.0",
+    "typescript": "*"
   },
   "scripts": {
     "lint": "biome lint ./",
     "test": "bun test",
-    "skip-test:coverage": "node --test --experimental-test-coverage --test-reporter=spec",
+    "test:coverage": "bun test --coverage",
     "prepub": "bun run lint && bun run test",
     "pub": "npm publish --access public"
   },
@@ -47,7 +50,7 @@
     "README.md",
     "CHANGELOG.md",
     "incremental-build.mjs",
-    "experimental-incremental-build.mjs",
+    "legacy-incremental-build.mjs",
     "bin",
     "package.json"
   ]

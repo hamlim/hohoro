@@ -3,12 +3,12 @@ import { copyFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join as pathJoin } from "node:path";
 import { fileURLToPath } from "node:url";
 import fg from "fast-glob";
-import { runBuild } from "../experimental-incremental-build.mjs";
+import { runBuild } from "../legacy-incremental-build.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-describe("experimental hohoro", () => {
+describe("[legacy] hohoro", () => {
   // copy over files from the template dir to the src dir
   beforeEach(() => {
     const templateDir = pathJoin(
@@ -26,7 +26,7 @@ describe("experimental hohoro", () => {
     }
   });
 
-  it("[experimental] It correctly builds the library", async () => {
+  it("[legacy] correctly builds the library", async () => {
     const logs = [];
     const errors = [];
     const logger = {
@@ -56,7 +56,7 @@ describe("experimental hohoro", () => {
     expect(logs[0]).toContain("compiled: 2 files, copied 1 file");
   });
 
-  it("[experimental] It only builds changed files", async () => {
+  it("[legacy] only builds changed files", async () => {
     const logs = [];
     const errors = [];
     const logger = {
@@ -81,15 +81,18 @@ describe("experimental hohoro", () => {
       "src",
       "tsx-file.tsx",
     );
-    writeFileSync(tsxFile, `export const foo = 'bar';`);
+    writeFileSync(tsxFile, `export const foo = 'baz';`);
 
     await runBuild({
       rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
       logger,
     });
 
+    // logs[0] is the initial build
+    // logs[1] is the initial type def build
+    // logs[2] is the incremental rebuild
     // most important assertion, only the tsx file should have been compiled!
-    expect(logs[1]).toContain("compiled: 1 file");
+    expect(logs[2]).toContain("compiled: 1 file");
 
     const distFiles = fg.sync(
       pathJoin(__dirname, "..", "sample-workspace-dir", "dist", "**/*"),

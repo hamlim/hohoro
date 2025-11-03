@@ -22,12 +22,9 @@ Add a build script to your `package.json`:
 }
 ```
 
-Ensure you have SWC and TSC installed and configured, specifically you'll need:
+By default, hohoro uses [oxc](https://oxc.rs/) to both transform your library assets, and also emit `.d.ts` files. You'll need to ensure that you have a `tsconfig.json` file configured for your project, as hohoro will extend your config by default!
 
-- `.swcrc` in the root of your project
-- `tsconfig.json` in the root of your project
-
-`hohoro` takes care of the rest by automatically running SWC and TSC in parallel, and only recompiling files that have changed since the last build.
+`hohoro` will only recompile files that have changed since the last build, you can delete the `dist/build-cache.json` file to force a full re-build if necessary.
 
 ### Watch Mode:
 
@@ -52,23 +49,26 @@ Then add the following `dev` script to your `package.json`:
 }
 ```
 
-## Experimental:
+## Legacy:
 
-This library also exposes a `hohoro-experimental` binary that builds code using [oxc](https://oxc.rs/) with [`oxc-transform`](https://www.npmjs.com/package/oxc-transform).
+> Prior to v1, hohoro used SWC and TSC to compile your files and emit declaration files, the default was changed to used oxc instead
+> If you still need/want to use SWC to compile your files, then you'll want the legacy entrypoint
 
-When using the experimental binary - you'll **need to also install `oxc-transform` as a devDependency**.
+This library also exposes a `hohoro-legacy` binary that builds code using [swc](https://swc.rs/).
+
+When using the legacy binary - you'll **need to also install `@swc/core`, `@swc/cli` and `typescript` as devDependencies**.
 
 ### Usage:
 
 ```json
 {
   "scripts": {
-    "build": "hohoro-experimental"
+    "build": "hohoro-legacy"
   }
 }
 ```
 
-You **do not need additional configuration** when using the experimental build.
+Additionally, you'll need to configure a local `.swcrc` config file, see [here](https://swc.rs/docs/configuration/swcrc) for details on config options.
 
 ## Contributing:
 

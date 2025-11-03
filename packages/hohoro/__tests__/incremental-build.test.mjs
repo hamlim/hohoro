@@ -26,7 +26,7 @@ describe("stable hohoro", () => {
     }
   });
 
-  it("correctly builds the library", async () => {
+  it("It correctly builds the library", async () => {
     const logs = [];
     const errors = [];
     const logger = {
@@ -56,7 +56,7 @@ describe("stable hohoro", () => {
     expect(logs[0]).toContain("compiled: 2 files, copied 1 file");
   });
 
-  it("only builds changed files", async () => {
+  it("It only builds changed files", async () => {
     const logs = [];
     const errors = [];
     const logger = {
@@ -81,18 +81,15 @@ describe("stable hohoro", () => {
       "src",
       "tsx-file.tsx",
     );
-    writeFileSync(tsxFile, `export const foo = 'baz';`);
+    writeFileSync(tsxFile, `export const foo = 'bar';`);
 
     await runBuild({
       rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
       logger,
     });
 
-    // logs[0] is the initial build
-    // logs[1] is the initial type def build
-    // logs[2] is the incremental rebuild
     // most important assertion, only the tsx file should have been compiled!
-    expect(logs[2]).toContain("compiled: 1 file");
+    expect(logs[1]).toContain("compiled: 1 file");
 
     const distFiles = fg.sync(
       pathJoin(__dirname, "..", "sample-workspace-dir", "dist", "**/*"),

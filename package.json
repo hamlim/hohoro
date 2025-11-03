@@ -3,10 +3,10 @@
   "workspaces": ["apps/*", "packages/*"],
   "private": true,
   "devDependencies": {
-    "@turbo/gen": "1.13.3",
+    "@turbo/gen": "2.6.0",
     "knip": "5.25.2",
     "one-version": "0.2.0",
-    "turbo": "2.2.3",
+    "turbo": "2.6.0",
     "@biomejs/biome": "1.9.4"
   },
   "scripts": {

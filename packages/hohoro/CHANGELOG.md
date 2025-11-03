@@ -1,5 +1,25 @@
 ### Unreleased:
 
+### [1.0.0] - November 2nd, 2025
+
+_This change may require some light migration work to upgrade to!_
+
+TL;DR: The stable entrypoint for hohoro has shifted to what was formerly the "experimental" entrypoint, moving from SWC to OXC by default.
+
+#### Migrating:
+
+If you were previously using `hohoro-experimental` and/or importing from `hohoro/experimental`, then the migration is as easy as removing the `-experimental` and `/experimental` in all references.
+
+If however you were still using the SWC-powered entrypoint (e.g. not using the `/experimental` or `-experimental` entrypoints), you'll can either:
+
+- Try to use the stable entrypoint, using OXC
+  - If this works, you can remove your `.swcrc` config and you shouldn't need any other changes
+- If that doesn't work, then you can use the "legacy" entrypoint
+  - replace `hohoro` CLI entrypoint with `hohoro-legacy`
+  - replace `'hohoro';` import with `'hohoro/legacy';` import
+
+You'll also need to make sure that you have `@swc/cli`, `@swc/core` and `typescript` installed as devDeps (**only if continuing to use the legacy entrypoint**).
+
 ### [0.3.0] - September 29th, 2024
 
 _This change should be backwards compatible for existing installs_

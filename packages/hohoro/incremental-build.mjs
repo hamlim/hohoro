@@ -1,94 +1,85 @@
-import { exec } from "node:child_process";
 import { createHash } from "node:crypto";
-import { createReadStream, readFileSync, rmSync, writeFileSync } from "node:fs";
-import path, { join as pathJoin, resolve } from "node:path";
-import { promisify } from "node:util";
+import {
+  copyFileSync,
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import path, { join as pathJoin, basename, extname, dirname } from "node:path";
 import createDebug from "debug";
 import fg from "fast-glob";
-
-const execAsync = promisify(exec);
+import { transform } from "oxc-transform";
 
 const debug = createDebug("hohoro");
 
-function compile({ rootDirectory, files, logger }) {
-  const swcConfigPath = pathJoin(rootDirectory, ".swcrc");
-  const distPath = pathJoin(rootDirectory, "dist");
-  const command = [
-    "swc",
-    files.join(" "),
-    "-d",
-    distPath,
-    // copy over files that are not compiled
-    "--copy-files",
-    `--config-file ${swcConfigPath}`,
-    // Remove the leading directories from the compiled files
-    "--strip-leading-paths",
-  ].join(" ");
-  debug(`[compile] ${command}`);
-  return execAsync(command, { cwd: rootDirectory }).then(
-    ({ stdout, stderr }) => {
-      if (stderr) {
-        logger.error(stderr);
-      }
-      if (stdout) {
-        logger.log(stdout);
-      }
-    },
-  );
+function writeFileSyncWithDirs(filePath, data) {
+  const dir = dirname(filePath);
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
+
+  writeFileSync(filePath, data);
 }
 
-// Hack incoming!
-// @SEE: https://stackoverflow.com/a/44748041
-// TL;DR: Create a temp tsconfig file with the files to compile the declarations for
-// and run tsc with only those files
-// We can't mix the `tsc` cli with both `--project` and a list of files to compile because TSC
-// ignores the tsconfig file when passing file paths in!
-async function compileDeclarations({ rootDirectory, files, logger }) {
-  const tempTSConfigPath = pathJoin(rootDirectory, "temp.tsconfig.json");
-  const tempTSconfig = {
-    extends: "./tsconfig.json",
-    include: files,
-    compilerOptions: {
-      noEmit: false,
-      declaration: true,
-      emitDeclarationOnly: true,
-      outDir: "dist",
-    },
-    exclude: ["**/__tests__/**"],
-  };
-  debug(
-    `[compileDeclarations] Writing temp tsconfig file: `,
-    JSON.stringify(tempTSconfig, null, 2),
-  );
-  writeFileSync(tempTSConfigPath, JSON.stringify(tempTSconfig, null, 2));
-  const command = `tsc --project temp.tsconfig.json`;
-  debug(`[compileDeclarations] ${command}`);
-  return execAsync(command, { cwd: rootDirectory }).then(
-    // For both success and failures we want to cleanup the temp file!
-    ({ stdout, stderr }) => {
-      if (stderr) {
-        logger.error(stderr);
+function copyFileSyncWithDirs(filePath, data) {
+  const dir = dirname(filePath);
+  if (!existsSync(dir)) {
+    mkdirSync(dir, { recursive: true });
+  }
+
+  copyFileSync(filePath, data);
+}
+
+function compile({ files, logger }) {
+  debug(`[compile] Compiling ${files}...`);
+  let compileCount = 0;
+  let copyCount = 0;
+  const errors = [];
+  for (const filePath of files) {
+    const distPath = filePath.replace("src", "dist");
+
+    switch (extname(filePath)) {
+      case ".ts":
+      case ".js":
+      case ".jsx":
+      case ".tsx": {
+        const {
+          code,
+          declaration,
+          errors: compileErrors,
+        } = transform(basename(filePath), readFileSync(filePath).toString(), {
+          typescript: {
+            declaration: {
+              emit: true,
+            },
+          },
+        });
+
+        if (compileErrors.length) {
+          errors.push(...compileErrors);
+          logger.error(compileErrors);
+        }
+
+        writeFileSyncWithDirs(distPath.replace(/(\.tsx|\.ts)/, ".js"), code);
+        if (declaration) {
+          writeFileSyncWithDirs(
+            distPath.replace(/(\.tsx|\.ts)/, ".d.ts"),
+            declaration,
+          );
+        }
+        compileCount++;
+        break;
       }
-      if (stdout) {
-        logger.log(stdout);
-      } else {
-        // TSC doesn't seem to output anything on success
-        // so if we don't have stdout, then log a default success message
-        logger.log("Successfully compiled declaration files!");
+      default: {
+        copyFileSyncWithDirs(filePath, distPath);
+        copyCount++;
+        break;
       }
-      rmSync(tempTSConfigPath);
-    },
-    (err) => {
-      rmSync(tempTSConfigPath);
-      if (typeof err.stdout === "string") {
-        throw new Error(err.stdout);
-      }
-      if (typeof err.stderr === "string") {
-        throw new Error(err.stderr);
-      }
-      throw new Error(`Unknown raw error: \n\n${JSON.stringify(err, null, 2)}`);
-    },
-  );
+    }
+  }
+  return { compileCount, copyCount, errors };
 }
 
 function loadCacheFile({ cacheFilePath }) {
@@ -170,25 +161,27 @@ export async function runBuild(
     (changedFile) => rootDirectory + changedFile,
   );
 
-  const [compileResult, declarationsResult] = await Promise.allSettled([
-    compile({ rootDirectory, files: absoluteChangedFiles, logger }),
-    compileDeclarations({ rootDirectory, files: absoluteChangedFiles, logger }),
-  ]);
-  if (
-    compileResult.status === "rejected" ||
-    declarationsResult.status === "rejected"
-  ) {
-    if (compileResult.status === "rejected") {
-      logger.error(`Failed to compile: ${compileResult.reason}`);
-    }
-    if (declarationsResult.status === "rejected") {
-      logger.error(
-        `Failed to compile declarations: ${declarationsResult.reason}`,
-      );
-    }
-    debug(`Failed, ran in ${Date.now() - start}ms`);
+  try {
+    mkdirSync(pathJoin(rootDirectory, "dist"), { recursive: true });
+  } catch {}
+
+  const { compileCount, copyCount, errors } = compile({
+    files: absoluteChangedFiles,
+    logger,
+  });
+
+  if (errors.length) {
+    logger.error(`Failed to compile: ${errors}`);
+    debug(`Ran in ${Date.now() - start}ms`);
     process.exit(1);
   }
+  logger.log(
+    `compiled: ${compileCount} file${compileCount === 1 ? "" : "s"}${
+      copyCount > 0
+        ? `, copied ${copyCount} file${copyCount === 1 ? "" : "s"}`
+        : ""
+    }`,
+  );
   try {
     writeFileSync(cacheFilePath, JSON.stringify(filesHashed));
   } catch (error) {

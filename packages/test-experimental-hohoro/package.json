@@ -11,14 +11,14 @@
   "type": "module",
   "devDependencies": {
     "@biomejs/biome": "1.6.3",
-    "@swc/cli": "0.3.10",
-    "@swc/core": "1.4.2",
     "@types/bun": "latest",
-    "hohoro": "workspace:*"
+    "hohoro": "workspace:*",
+    "react": "*",
+    "@types/react": "19.2.2"
   },
   "scripts": {
     "dev": "node --watch-path=./src dev.mjs",
-    "build": "hohoro-experimental",
+    "build": "hohoro",
     "type-check": "tsc -p ./tsconfig.json",
     "lint": "biome lint ./src/",
     "test": "bun test",
