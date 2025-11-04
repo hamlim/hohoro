@@ -2,7 +2,7 @@
 
 An incremental build tool for JavaScript and TypeScript projects.
 
-**[Docs](https://hohoro.vercel.app/)**
+**[Docs](https://hohoro-docs.mhamlin.workers.dev/)**
 
 ## Installation:
 
