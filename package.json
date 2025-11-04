@@ -20,7 +20,8 @@
     "test": "turbo run test",
     "generator": "bun ./scripts/generator.ts",
     "one-version:check": "one-version check",
-    "knip": "knip"
+    "knip": "knip",
+    "deploy": "turbo run deploy"
   },
   "packageManager": "bun@1.1.32"
 }

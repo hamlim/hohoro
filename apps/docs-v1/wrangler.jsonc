@@ -1,0 +1,13 @@
+{
+  "name": "hohoro-docs",
+  "compatibility_date": "2025-04-16",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./dist/worker/serve-cloudflare.js",
+  "assets": {
+    "directory": "./dist/assets",
+    "binding": "ASSETS",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true
+}

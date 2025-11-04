@@ -1,0 +1,11 @@
+node_modules
+dist
+.wrangler
+.env
+.env.local
+.env.development.local
+.env.test.local
+wrangler.toml
+tsconfig.tsbuildinfo
+
+.DS_Store
