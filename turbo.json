@@ -16,7 +16,10 @@
       "persistent": true
     },
     "deploy": {
-      "dependsOn": ["build", "^build"]
+      "cache": false,
+      "dependsOn": ["^build", "build"],
+      "env": ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"],
+      "outputLogs": "new-only"
     }
   }
 }
