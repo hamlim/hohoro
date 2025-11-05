@@ -1,7 +1,7 @@
 {
   "name": "hohoro",
   "description": "An incremental build tool for JavaScript and TypeScript projects.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "bin": {
     "hohoro": "./bin/index.mjs",
     "hohoro-legacy": "./bin/legacy.mjs"
@@ -15,7 +15,7 @@
     "directory": "packages/hohoro",
     "url": "https://github.com/hamlim/hohoro"
   },
-  "homepage": "https://hohoro.vercel.app/",
+  "homepage": "https://hohoro-docs.mhamlin.workers.dev/",
   "license": "MIT",
   "author": {
     "name": "Matthew Hamlin",

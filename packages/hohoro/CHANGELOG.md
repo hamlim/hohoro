@@ -1,5 +1,9 @@
 ### Unreleased:
 
+### [1.0.1] - November 5th, 2025
+
+Updated the homepage field in package.json to point to the updated docs site, no changes to the package itself.
+
 ### [1.0.0] - November 2nd, 2025
 
 _This change may require some light migration work to upgrade to!_
