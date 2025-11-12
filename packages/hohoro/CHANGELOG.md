@@ -1,5 +1,11 @@
 ### Unreleased:
 
+### [1.0.2] - November 12th, 2025
+
+Fixed non-js/ts/tsx/json assets not being copied over from the `src` to the `dist` directory.
+
+Hohoro should now transform `.js`, `.ts`, and `.tsx`, and then will copy over all other assets to `dist/`!
+
 ### [1.0.1] - November 5th, 2025
 
 Updated the homepage field in package.json to point to the updated docs site, no changes to the package itself.

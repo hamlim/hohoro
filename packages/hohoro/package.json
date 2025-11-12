@@ -1,7 +1,7 @@
 {
   "name": "hohoro",
   "description": "An incremental build tool for JavaScript and TypeScript projects.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "bin": {
     "hohoro": "./bin/index.mjs",
     "hohoro-legacy": "./bin/legacy.mjs"
