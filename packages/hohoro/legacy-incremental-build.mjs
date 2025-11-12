@@ -173,10 +173,7 @@ export async function runBuild(
   // @see https://github.com/mrmlnc/fast-glob/issues/237#issuecomment-546057189
   // @see https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#how-to-write-patterns-on-windows
   const files = fg.sync(
-    path.posix.join(
-      fg.convertPathToPattern(rootDirectory),
-      "src/**/*",
-    ),
+    path.posix.join(fg.convertPathToPattern(rootDirectory), "src/**/*"),
     {
       ignore: ["**/__tests__/**"],
       onlyFiles: true,

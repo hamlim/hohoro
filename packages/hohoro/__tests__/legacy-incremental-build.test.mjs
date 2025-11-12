@@ -147,10 +147,7 @@ describe("[legacy] hohoro", () => {
       "src",
       "README.md",
     );
-    writeFileSync(
-      mdFile,
-      `# Updated\n\nThis file has been updated.`,
-    );
+    writeFileSync(mdFile, `# Updated\n\nThis file has been updated.`);
 
     // Run build again
     await runBuild({

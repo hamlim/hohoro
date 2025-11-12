@@ -144,10 +144,7 @@ describe("stable hohoro", () => {
       "src",
       "styles.css",
     );
-    writeFileSync(
-      cssFile,
-      `.container { display: block; }`,
-    );
+    writeFileSync(cssFile, `.container { display: block; }`);
 
     // Run build again
     await runBuild({
