@@ -1,18 +1,11 @@
 import { exec } from "node:child_process";
 import { createHash } from "node:crypto";
-import {
-  createReadStream,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-  mkdirSync,
-} from "node:fs";
-import path, { join as pathJoin, resolve, basename, extname } from "node:path";
-import { copyFileSync } from "node:fs";
+import { copyFileSync, createReadStream, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import path, { basename, extname, join as pathJoin } from "node:path";
 import { promisify } from "node:util";
+import { transformSync } from "@swc/core";
 import createDebug from "debug";
 import fg from "fast-glob";
-import { transformSync } from "@swc/core";
 
 const execAsync = promisify(exec);
 
@@ -86,9 +79,13 @@ function compile({ rootDirectory, files, logger }) {
 // ignores the tsconfig file when passing file paths in!
 async function compileDeclarations({ rootDirectory, files, logger }) {
   const tempTSConfigPath = pathJoin(rootDirectory, "temp.tsconfig.json");
+  const tscFiles = files.filter((file) => file.endsWith(".ts") || file.endsWith(".tsx"));
+  if (tscFiles.length === 0) {
+    return;
+  }
   const tempTSconfig = {
     extends: "./tsconfig.json",
-    include: files,
+    include: tscFiles,
     compilerOptions: {
       noEmit: false,
       declaration: true,
@@ -97,10 +94,7 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
     },
     exclude: ["**/__tests__/**"],
   };
-  debug(
-    `[compileDeclarations] Writing temp tsconfig file: `,
-    JSON.stringify(tempTSconfig, null, 2),
-  );
+  debug(`[compileDeclarations] Writing temp tsconfig file: `, JSON.stringify(tempTSconfig, null, 2));
   writeFileSync(tempTSConfigPath, JSON.stringify(tempTSconfig, null, 2));
   const command = `tsc --project temp.tsconfig.json`;
   debug(`[compileDeclarations] ${command}`);
@@ -135,7 +129,7 @@ async function compileDeclarations({ rootDirectory, files, logger }) {
 function loadCacheFile({ cacheFilePath }) {
   try {
     return JSON.parse(readFileSync(cacheFilePath).toString());
-  } catch (e) {
+  } catch (_e) {
     return [];
   }
 }
@@ -160,9 +154,7 @@ function hashFile(filePath) {
   });
 }
 
-export async function runBuild(
-  { rootDirectory, logger } = { rootDirectory: process.cwd(), logger: console },
-) {
+export async function runBuild({ rootDirectory, logger } = { rootDirectory: process.cwd(), logger: console }) {
   const start = Date.now();
   debug("[runBuild] Starting...");
   const cacheFilePath = pathJoin(rootDirectory, "dist", "build-cache.json");
@@ -172,29 +164,19 @@ export async function runBuild(
   // Need to convert to a posix path for use with `fast-glob` on Windows.
   // @see https://github.com/mrmlnc/fast-glob/issues/237#issuecomment-546057189
   // @see https://github.com/mrmlnc/fast-glob?tab=readme-ov-file#how-to-write-patterns-on-windows
-  const files = fg.sync(
-    path.posix.join(
-      fg.convertPathToPattern(rootDirectory),
-      "src/**/*.{ts,tsx,js,json}",
-    ),
-    {
-      ignore: ["**/__tests__/**"],
-    },
-  );
+  const files = fg.sync(path.posix.join(fg.convertPathToPattern(rootDirectory), "src/**/*"), {
+    ignore: ["**/__tests__/**"],
+    onlyFiles: true,
+  });
 
   const relativeFiles = files.map((file) => file.split(rootDirectory)[1]);
 
-  const filesHashed = (await Promise.all(files.map(hashFile))).map(
-    (hashed, idx) => [relativeFiles[idx], hashed],
-  );
+  const filesHashed = (await Promise.all(files.map(hashFile))).map((hashed, idx) => [relativeFiles[idx], hashed]);
 
   const changedFiles = [];
 
   for (const [computedFile, computedHash] of filesHashed) {
-    if (
-      cacheFile.find(([filePath]) => filePath === computedFile)?.[1] !==
-      computedHash
-    ) {
+    if (cacheFile.find(([filePath]) => filePath === computedFile)?.[1] !== computedHash) {
       changedFiles.push(computedFile);
     }
   }
@@ -207,32 +189,25 @@ export async function runBuild(
 
   debug(`[runBuild] Changed files: `, JSON.stringify(changedFiles, null, 2));
 
-  const absoluteChangedFiles = changedFiles.map(
-    (changedFile) => rootDirectory + changedFile,
-  );
+  const absoluteChangedFiles = changedFiles.map((changedFile) => rootDirectory + changedFile);
 
   const [compileResult, declarationsResult] = await Promise.allSettled([
     compile({ rootDirectory, files: absoluteChangedFiles, logger }),
     compileDeclarations({ rootDirectory, files: absoluteChangedFiles, logger }),
   ]);
-  if (
-    compileResult.status === "rejected" ||
-    declarationsResult.status === "rejected"
-  ) {
+  if (compileResult.status === "rejected" || declarationsResult.status === "rejected") {
     if (compileResult.status === "rejected") {
       logger.error(`Failed to compile: ${compileResult.reason}`);
     }
     if (declarationsResult.status === "rejected") {
-      logger.error(
-        `Failed to compile declarations: ${declarationsResult.reason}`,
-      );
+      logger.error(`Failed to compile declarations: ${declarationsResult.reason}`);
     }
     debug(`Failed, ran in ${Date.now() - start}ms`);
     process.exit(1);
   }
   try {
     writeFileSync(cacheFilePath, JSON.stringify(filesHashed));
-  } catch (error) {
+  } catch (_error) {
     logger.error(`Failed to write cache file`);
   }
   debug(`Ran in ${Date.now() - start}ms`);

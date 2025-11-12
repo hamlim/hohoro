@@ -1,3 +1,3 @@
 export type Bar = {
-  x: number;
+	x: number;
 };

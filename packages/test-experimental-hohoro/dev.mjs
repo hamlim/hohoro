@@ -1,6 +1,6 @@
 import { runBuild } from "hohoro";
 
 await runBuild({
-  rootDirectory: process.cwd(),
-  logger: console,
+	rootDirectory: process.cwd(),
+	logger: console,
 });
