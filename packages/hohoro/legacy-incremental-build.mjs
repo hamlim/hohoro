@@ -175,10 +175,11 @@ export async function runBuild(
   const files = fg.sync(
     path.posix.join(
       fg.convertPathToPattern(rootDirectory),
-      "src/**/*.{ts,tsx,js,json}",
+      "src/**/*",
     ),
     {
       ignore: ["**/__tests__/**"],
+      onlyFiles: true,
     },
   );
 

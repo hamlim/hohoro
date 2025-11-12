@@ -18,7 +18,7 @@ describe("stable hohoro", () => {
       "template",
     );
     const srcDir = pathJoin(__dirname, "..", "sample-workspace-dir", "src");
-    const files = fg.sync(pathJoin(templateDir, "**/*.{ts,tsx,js,json}"));
+    const files = fg.sync(pathJoin(templateDir, "**/*"), { onlyFiles: true });
 
     for (const file of files) {
       const filePath = file.replace(templateDir, srcDir);
@@ -52,8 +52,11 @@ describe("stable hohoro", () => {
     expect(distFiles.some((file) => file.includes("json-file.json"))).toBe(
       true,
     );
+    expect(distFiles.some((file) => file.includes("styles.css"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("README.md"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("data.txt"))).toBe(true);
     expect(errors.length).toBe(0);
-    expect(logs[0]).toContain("compiled: 2 files, copied 1 file");
+    expect(logs[0]).toContain("compiled: 2 files, copied 4 files");
   });
 
   it("It only builds changed files", async () => {
@@ -101,6 +104,59 @@ describe("stable hohoro", () => {
     expect(distFiles.some((file) => file.includes("json-file.json"))).toBe(
       true,
     );
+    expect(distFiles.some((file) => file.includes("styles.css"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("README.md"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("data.txt"))).toBe(true);
+    expect(errors.length).toBe(0);
+  });
+
+  it("It copies and tracks non-JS/TS asset files in cache", async () => {
+    const logs = [];
+    const errors = [];
+    const logger = {
+      log(message) {
+        logs.push(message);
+      },
+      error(message) {
+        errors.push(message);
+      },
+    };
+
+    // Initial build
+    await runBuild({
+      rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
+      logger,
+    });
+
+    // Verify asset files are copied
+    const distFiles = fg.sync(
+      pathJoin(__dirname, "..", "sample-workspace-dir", "dist", "**/*"),
+    );
+    expect(distFiles.some((file) => file.includes("styles.css"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("README.md"))).toBe(true);
+    expect(distFiles.some((file) => file.includes("data.txt"))).toBe(true);
+
+    // Modify an asset file
+    const cssFile = pathJoin(
+      __dirname,
+      "..",
+      "sample-workspace-dir",
+      "src",
+      "styles.css",
+    );
+    writeFileSync(
+      cssFile,
+      `.container { display: block; }`,
+    );
+
+    // Run build again
+    await runBuild({
+      rootDirectory: pathJoin(__dirname, "..", "sample-workspace-dir"),
+      logger,
+    });
+
+    // Should only rebuild the changed CSS file
+    expect(logs[1]).toContain("copied 1 file");
     expect(errors.length).toBe(0);
   });
 
@@ -108,7 +164,7 @@ describe("stable hohoro", () => {
   afterEach(() => {
     const srcDir = pathJoin(__dirname, "..", "sample-workspace-dir", "src");
 
-    const files = fg.sync(pathJoin(srcDir, "**/*.{ts,tsx,js,json}"));
+    const files = fg.sync(pathJoin(srcDir, "**/*"), { onlyFiles: true });
     for (const file of files) {
       rmSync(file, { recursive: true });
     }
