@@ -24,6 +24,15 @@ describe("[legacy] hohoro", () => {
       const filePath = file.replace(templateDir, srcDir);
       copyFileSync(file, filePath);
     }
+
+    // clear out dist dir if it exists
+    try {
+      rmSync(pathJoin(__dirname, "..", "sample-workspace-dir", "dist"), {
+        recursive: true,
+      });
+    } catch {
+      // ignore
+    }
   });
 
   it("[legacy] correctly builds the library", async () => {

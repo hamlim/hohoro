@@ -2,17 +2,17 @@ import { exec } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
   createReadStream,
+  mkdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
-  mkdirSync,
 } from "node:fs";
-import path, { join as pathJoin, resolve, basename, extname } from "node:path";
 import { copyFileSync } from "node:fs";
+import path, { join as pathJoin, basename, extname } from "node:path";
 import { promisify } from "node:util";
+import { transformSync } from "@swc/core";
 import createDebug from "debug";
 import fg from "fast-glob";
-import { transformSync } from "@swc/core";
 
 const execAsync = promisify(exec);
 
@@ -86,9 +86,15 @@ function compile({ rootDirectory, files, logger }) {
 // ignores the tsconfig file when passing file paths in!
 async function compileDeclarations({ rootDirectory, files, logger }) {
   const tempTSConfigPath = pathJoin(rootDirectory, "temp.tsconfig.json");
+  const tscFiles = files.filter(
+    (file) => file.endsWith(".ts") || file.endsWith(".tsx"),
+  );
+  if (tscFiles.length === 0) {
+    return;
+  }
   const tempTSconfig = {
     extends: "./tsconfig.json",
-    include: files,
+    include: tscFiles,
     compilerOptions: {
       noEmit: false,
       declaration: true,
